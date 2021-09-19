@@ -78,7 +78,7 @@ jQuery(document).ready(function ($) {
 
                 setTimeout(() => {
                     window.location.href = 'https://' + sGo;
-                }, sTe * 7);
+                }, sTe * 10);
             }
 
             //Xử lý nếu đang ở trang chủ Google
