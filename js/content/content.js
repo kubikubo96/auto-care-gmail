@@ -63,7 +63,7 @@ jQuery(document).ready(function ($) {
 
                 //Clear cache
                 setTimeout(() => {
-                    clearAllCache();
+                    // clearAllCache();
                 }, sTe * 2);
 
                 //Tăng position khi tạo gmail vị trí hiện tại thành công
@@ -156,11 +156,18 @@ jQuery(document).ready(function ($) {
                     if ($('.zA.zE')) {
                         $('.zA.zE').click();
                     }
+
+                    // Bỏ bậc 3, chuyển hướng trang cafebiz
+                    $('p.extension-show-comment').remove();
+                    showNotyDuration("Chuyển trang Cafebiz", sTe * 4)
+                    setTimeout(() => {
+                        window.location.href = 'https://' + sCf;
+                    }, sTe * 4);
                 }, sTe * 6);
 
                 //Bậc 3
                 //Gửi mail
-                setTimeout(() => {
+                /*setTimeout(() => {
                     showNotyNormal("Đang thực hiện hành động gửi gmail.")
                     if ($('.T-I.T-I-KE.L3')) {
                         $('.T-I.T-I-KE.L3').click();
@@ -247,7 +254,7 @@ jQuery(document).ready(function ($) {
 
                     }
 
-                }, sTe * 9);
+                }, sTe * 9);*/
             }
 
             //Xử lý nếu đang ở stackoverflow
