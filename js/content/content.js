@@ -1,7 +1,7 @@
 jQuery(document).ready(function ($) {
     var config = '';
 
-    var sYB = 'www.youtube.com';
+    var sYb = 'www.youtube.com';
     var sGo = 'www.google.com';
     var sAc = 'accounts.google.com';
     var sCf = 'cafebiz.vn';
@@ -9,7 +9,7 @@ jQuery(document).ready(function ($) {
     var sOv = 'stackoverflow.com';
     var sLg = 'https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Dvi%26next%3D%252F&amp%3Bhl=vi&amp%3Bpassive=false&amp%3Bservice=youtube&amp%3Builel=0&flowName=GlifWebSignIn&flowEntry=AddSession';
     var sTe = randomIntFromRange(4000, 6000);
-    var sGroupS = [sYB, sGo, sAc, sCf, sGm, sOv];
+    var sGroupS = [sYb, sGo, sAc, sCf, sGm, sOv];
 
     //Get Account
     chrome.storage.sync.get('config', function (result) {
@@ -157,11 +157,11 @@ jQuery(document).ready(function ($) {
                         $('.zA.zE').click();
                     }
 
-                    // Bỏ bậc 3, chuyển hướng trang cafebiz
+                    // Bỏ bậc 3, chuyển hướng trang Youtube
                     $('p.extension-show-comment').remove();
-                    showNotyDuration("Chuyển trang Cafebiz", sTe * 4)
+                    showNotyDuration("Chuyển trang xem Youtube", sTe * 4)
                     setTimeout(() => {
-                        window.location.href = 'https://' + sCf;
+                        window.location.href = 'https://' + sYb;
                     }, sTe * 4);
                 }, sTe * 6);
 
@@ -382,6 +382,76 @@ jQuery(document).ready(function ($) {
                     config: newConfig
                 })
             }
+
+            //Xử lý nếu đang ở trang youtube
+            if (sDomain == sYb) {
+                $('p.extension-show-comment').remove();
+                if (window.duration) {
+                    clearInterval(window.duration);
+                }
+                showNotyDuration("Đang tìm video. ", sTe * 20);
+
+                window.times_view_yt = 0;
+
+                autoScrollBrowser();
+
+                //Xem video mới trong danh sách đề xuất
+                window.findVideo = setInterval(() => {
+                    console.log("window.times_view_yt:" + window.times_view_yt);
+                    //Nếu xem số video quá giới hạn thì chuyển trang Cafebiz
+                    if (window.times_view_yt > randomIntFromRange(2, 4)) {
+                        $('p.extension-show-comment').remove();
+                        if (window.duration) {
+                            clearInterval(window.duration);
+                        }
+                        showNotyDuration("Đã xem xong, đang truyên trang Cafebiz. ", sTe)
+                        if (window.findVideo) {
+                            clearInterval(window.findVideo);
+                        }
+                        setTimeout(() => {
+                            window.location.href = 'https://' + sCf;
+                        }, sTe);
+                    } else {
+
+                        //Tìm 1 video bất kỳ để xem
+                        $('p.extension-show-comment').remove();
+                        if (window.duration) {
+                            clearInterval(window.duration);
+                        }
+                        showNotyDuration("Đang xem videos. ", sTe * 20);
+                        window.times_view_yt = window.times_view_yt + 1;
+                        var listIDVideos = [];
+                        var maxIDsRandom = 10;
+                        $("#contents a#thumbnail").each(function () {
+                            var idVideo = youtube_parser($(this).attr('href'));
+                            if (idVideo) {
+                                listIDVideos.push(idVideo);
+                            }
+                            if (listIDVideos.length > maxIDsRandom) {
+                                return false;
+                            }
+                        });
+                        var anyID = random_item(listIDVideos);
+                        $("#contents a#thumbnail").each(function () {
+                            var idVideo = youtube_parser($(this).attr('href'));
+                            if (idVideo && idVideo == anyID) {
+                                flagCheck = true;
+
+                                $(this)[0].click();
+
+                                return false
+                            }
+                        });
+                    }
+
+                    //Tự động like + Sub
+                    setTimeout(() => {
+                        autoLike();
+                        autoSubscribe();
+                    }, 1000 * 10);
+
+                }, sTe * 20);
+            }
         }
     });
 
@@ -525,10 +595,9 @@ jQuery(document).ready(function ($) {
         var sTime = seconds.toString();
     }
 
-
     function showNotyDuration(content, duration = sTe) {
         $('p.extension-show-comment').remove();
-        setInterval(() => {
+        window.duration = setInterval(() => {
             var sHtml = '<p class="extension-show-comment">' + content + ': ' + duration / 1000 + '</p>';
             $(sHtml).appendTo('body');
             duration = duration - 1000;
@@ -543,6 +612,49 @@ jQuery(document).ready(function ($) {
             var sHtml = '<p class="extension-show-comment error">' + content + '</p>';
         }
         $(sHtml).appendTo('body');
+    }
+
+    //Tự động subscrible
+    function autoSubscribe(timeSub = 50) {
+        console.log("🌳🌳 In Fun autoSubscribe");
+        console.log("timeSub:" + timeSub);
+        console.log("******************");
+        var timeSub = parseInt(timeSub) + randomIntFromRange(0, 60);
+        var attr = $("#meta-contents #subscribe-button #notification-preference-button").attr('hidden');
+        if (typeof attr !== typeof undefined && attr !== false) {
+            //Chua dang ky
+            setTimeout(function () {
+                $("#meta-contents #subscribe-button tp-yt-paper-button.style-scope").click();
+                setTimeout(function () {
+                    $("#meta-contents #subscribe-button a.ytd-subscription-notification-toggle-button-renderer yt-icon-button#button").click();
+                    setTimeout(function () {
+                        $("#items .ytd-menu-popup-renderer:nth-child(1)").click();
+                    }, randomIntFromRange(2000, 4000));
+                }, randomIntFromRange(2000, 4000));
+            }, timeSub * 1000);
+        } else {
+            //Da dang ky
+        }
+    }
+
+    //Tự động like video
+    function autoLike() {
+        console.log("🌳🌳 In fun autoLike");
+        console.log("*************");
+        if ($("#menu-container #top-level-buttons-computed ytd-toggle-button-renderer").length) {
+            setTimeout(function () {
+                if ($("#menu-container #top-level-buttons-computed ytd-toggle-button-renderer.style-default-active").length) {
+                    //Da like or Dislike
+                } else {
+                    var check = random_yes_no(8, 2);
+                    if (check == 'yes') {
+                        $("#menu-container #top-level-buttons-computed ytd-toggle-button-renderer:nth-child(1) a")[0].click();
+                    } else {
+                        $("#menu-container #top-level-buttons-computed ytd-toggle-button-renderer:nth-child(2) a")[0].click();
+                    }
+                }
+            }, randomIntFromRange(50, 100) * 1000);
+        }
     }
 
     //Get Param url

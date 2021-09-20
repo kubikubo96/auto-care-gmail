@@ -14,7 +14,15 @@ var d_title_mail = [
     'Mai mốt ăn đc cơm',
     'Tôi là ai và nếu vậy thì bao nhiêu',
     'Thôi xong còn gì nữa đâu',
-    'Còn lại gì sau cơn mưa'
+    'Còn lại gì sau cơn mưa',
+    'Đã còn thì sao mất',
+    'Vì đâu ta quen nhau',
+    'Sâu thảm rồi ai đó ơi',
+    'Tình yêu và diệu kỳ',
+    'Cuộc sống và những truyện cười',
+    'rồi ai cũng là ai',
+    'tình trường trong sông dài',
+    'Bác hợp nhất lang mai'
 ];
 
 var d_content_mail = [
@@ -23,7 +31,15 @@ var d_content_mail = [
     'Mai mốt ăn đc cơm',
     'Tôi là ai và nếu vậy thì bao nhiêu',
     'Thôi xong còn gì nữa đâu',
-    'Còn lại gì sau cơn mưa'
+    'Còn lại gì sau cơn mưa',
+    'Đã còn thì sao mất',
+    'Vì đâu ta quen nhau',
+    'Sâu thảm rồi ai đó ơi',
+    'Tình yêu và diệu kỳ',
+    'Cuộc sống và những truyện cười',
+    'rồi ai cũng là ai',
+    'tình trường trong sông dài',
+    'Bác hợp nhất lang mai'
 ];
 
 var initConfigDefine = {
@@ -35,5 +51,5 @@ var initConfigDefine = {
     'email_send': d_mail_send,
     'title_mail': d_title_mail,
     'content_mail': d_content_mail,
-    'case_stack': 1
+    'case_stack': 1,
 };
