@@ -63,7 +63,7 @@ jQuery(document).ready(function ($) {
 
                 //Clear cache
                 setTimeout(() => {
-                    // clearAllCache();
+                    clearAllCache();
                 }, sTe * 2);
 
                 //Tăng position khi tạo gmail vị trí hiện tại thành công
